@@ -7,23 +7,38 @@ function substract (num, num2) {
 	return num - num2;
 };
 
-function sum (array) {
-	var total = 0;
-  for (let i = 0; i < array.length; i++) {
-    total += array[i];    
+function multiply (num, num2) {
+  return num * num2;
+}
+
+function divide (num, num2) {
+  return num / num2;
+}
+
+function operate (num, symbol, num2) {
+  switch (symbol) {
+    case "+":
+      add(num,num2);
+      break;
+    case "-":
+      substract(num,num2);
+      break;
+    case "*":
+      multiply(num,num2);
+      break;
+    case "/":
+      divide(num,num2);
+      break;    
   }
-  return total;
-};
+}
 
-function multiply (nums) {
-    var totalMultiply = 1;
-  
-    for (let i = 0; i < nums.length; i++) {
-      totalMultiply *= nums[i];
-    }
-    return totalMultiply;
-  };
 
+var firstNumber;
+var operator;
+var secondNumber;
+var accumulator = "";
+
+// Use these variables to do the calculations and keep storng the value. Read instructions in Odin Project //
 
 // EVENT LISTENERS //
 const clearAll = document.querySelector(".clear");
@@ -51,22 +66,24 @@ deleteOne.addEventListener("click", function forDelete () {
 buttons.forEach(option => option.addEventListener("click", function () {
     var type = option.classList[1];
     var buttonID = option.id;
-    var storedValue;
     
     if (type === "number")  {
       if (input.textContent === "0" && buttonID === "0") return;
       if (input.textContent === "0") {
         input.textContent = "";
       }
+      accumulator += option.id;
       input.textContent += option.id;
     }
     
 
     if (type === "symbol") {
+        accumulator += option.id;
         input.textContent += option.id
         history.textContent += input.textContent;
         input.textContent = "";
     }
+    console.log(accumulator);
         // USE A VARIABLE TO STORE THE VALUE // 
         return buttonID;
         // ADD SPACE BETWEEN OPERATION //

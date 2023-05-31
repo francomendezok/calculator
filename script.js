@@ -34,40 +34,46 @@ const input = document.querySelector("#input");
 
 
 // REMOVE SECTION //
-
 clearAll.addEventListener("click", function () {
     input.textContent = "";
     history.textContent = "";
   })
+
+deleteOne.addEventListener("click", function forDelete () {
+  let currentInput = input.textContent;
+  currentInput = currentInput.slice(0, -1); 
+  input.textContent = currentInput; 
+});
   
 
 
-
+// MAIN BUTTONS // 
 buttons.forEach(option => option.addEventListener("click", function () {
     var type = option.classList[1];
     var buttonID = option.id;
     var storedValue;
-
-    if (type === "number")  input.textContent += option.id;
     
-    // if (type === "symbol") {
-    //     history.textContent += input.textContent;
+    if (type === "number")  {
+      if (input.textContent === "0" && buttonID === "0") return;
+      if (input.textContent === "0") {
+        input.textContent = "";
+      }
+      input.textContent += option.id;
+    }
+    
 
-    // }
+    if (type === "symbol") {
+        input.textContent += option.id
+        history.textContent += input.textContent;
+        input.textContent = "";
+    }
         // USE A VARIABLE TO STORE THE VALUE // 
         return buttonID;
         // ADD SPACE BETWEEN OPERATION //
   }));
-
     
     
-    
-    
-    
-    
-    
-    
-    
+// KEYBOARD INPUTS //     
     var arrayNumbers = ["1","2","3","4","5","6","7","8","9","0"]
     var arraySymbols = [".","/","*","-","+","="];
 
@@ -77,8 +83,18 @@ buttons.forEach(option => option.addEventListener("click", function () {
         if (!input.textContent.includes(event.key))
         input.textContent += event.key;
     }
-});
-// WINDOW NOT READY YET // 
+
+    if (event.key === "Backspace") {
+      let currentInput = input.textContent;
+      currentInput = currentInput.slice(0, -1); 
+      input.textContent = currentInput; 
+    };
+
+    if (event.key === "Delete") {
+      input.textContent = "";
+      history.textContent = "";
+    }
+  });
 
 
 

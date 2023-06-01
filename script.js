@@ -18,25 +18,23 @@ function divide (num, num2) {
 function operate (num, symbol, num2) {
   switch (symbol) {
     case "+":
-      add(num,num2);
-      break;
+      return add(num,num2);
     case "-":
-      substract(num,num2);
-      break;
+      return substract(num,num2);
     case "*":
-      multiply(num,num2);
-      break;
+      return multiply(num,num2);
     case "/":
-      divide(num,num2);
-      break;    
+      return divide(num,num2);    
   }
 }
 
 
-var firstNumber;
-var operator;
-var secondNumber;
+var firstNumber = "";
+var operator = "";
+var secondNumber = "";
 var accumulator = "";
+var buttonID;
+
 
 // Use these variables to do the calculations and keep storng the value. Read instructions in Odin Project //
 
@@ -52,70 +50,108 @@ const input = document.querySelector("#input");
 clearAll.addEventListener("click", function () {
     input.textContent = "";
     history.textContent = "";
+    firstNumber = "";
+    operator = "";
+    secondNumber = "";
+    accumulator = "";
   })
 
 deleteOne.addEventListener("click", function forDelete () {
   let currentInput = input.textContent;
-  currentInput = currentInput.slice(0, -1); 
+  currentInput = currentInput.slice(0, -1);
+  accumulator = accumulator.slice(0,-1);
+  secondNumber = secondNumber.slice(0,-1); 
   input.textContent = currentInput; 
 });
   
 
-
 // MAIN BUTTONS // 
 buttons.forEach(option => option.addEventListener("click", function () {
     var type = option.classList[1];
-    var buttonID = option.id;
+    var result;
+    buttonID = option.id;
+
+
     
     if (type === "number")  {
       if (input.textContent === "0" && buttonID === "0") return;
-      if (input.textContent === "0") {
-        input.textContent = "";
-      }
-      accumulator += option.id;
+      if (input.textContent === "0") input.textContent = "";
+
+      accumulator += buttonID;
       input.textContent += option.id;
     }
     
+    if (type === "symbol" && buttonID != "=") {
+      if (accumulator) {
+        firstNumber = accumulator;
+        accumulator = "";
+      }
+      if (operator === "") operator = buttonID;
 
-    if (type === "symbol") {
-        accumulator += option.id;
         input.textContent += option.id
         history.textContent += input.textContent;
         input.textContent = "";
     }
-    console.log(accumulator);
-        // USE A VARIABLE TO STORE THE VALUE // 
+
+    if (firstNumber && type == "number") {
+      secondNumber = accumulator;
+    }
+
+    if (buttonID === "=") {
+      if (firstNumber && operator && secondNumber) {
+        result = operate(firstNumber,operator,secondNumber);
+        input.textContent = result;
+        history.textContent = firstNumber + operator + secondNumber;
+      }
+    }
         return buttonID;
-        // ADD SPACE BETWEEN OPERATION //
   }));
     
     
 // KEYBOARD INPUTS //     
-    var arrayNumbers = ["1","2","3","4","5","6","7","8","9","0"]
-    var arraySymbols = [".","/","*","-","+","="];
-
   window.addEventListener("keydown", function(event) {
-    if (arrayNumbers.includes(event.key)) input.textContent += event.key;
-    if (arraySymbols.includes(event.key)) {
-        if (!input.textContent.includes(event.key))
+    // NUMBER //
+    if (event.key === "1" || event.key === "2" || event.key === "3" || event.key === "4" || event.key === "5" || event.key === "6" || event.key === "7" || event.key === "8" || event.key === "9" || event.key === "0") {
+        if (input.textContent === "0" && event.key === "0") return;
+        if (input.textContent === "0") {
+          input.textContent = "";
+        }
         input.textContent += event.key;
-    }
+      }  
 
+    // SYMBOL // 
+    if (event.key === "." || event.key === "/" || event.key === "*" || event.key === "-" || event.key === "+") {
+        input.textContent += event.key;
+        history.textContent = input.textContent;
+        input.textContent = "";
+      }
+
+    // REMOVE //
     if (event.key === "Backspace") {
       let currentInput = input.textContent;
       currentInput = currentInput.slice(0, -1); 
       input.textContent = currentInput; 
+      accumulator = accumulator.slice(0,-1);
+      secondNumber = secondNumber.slice(0,-1); 
     };
 
     if (event.key === "Delete") {
       input.textContent = "";
       history.textContent = "";
+      firstNumber = "";
+      operator = "";
+      secondNumber = "";
+      accumulator = "";
     }
   });
 
 
 
 
+
+  // TODO 
+  // 1. Equals actions in keyboard and mouse. Add enter button
+  // 2. Operate function functional
 
 
 

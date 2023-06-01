@@ -80,17 +80,17 @@ buttons.forEach(option => option.addEventListener("click", function () {
       accumulator += buttonID;
       input.textContent += option.id;
     }
-    
+    // here solve problem in history content //
     if (type === "symbol" && buttonID != "=") {
+      if (operator === "") operator = buttonID;
+
       if (accumulator) {
         firstNumber = accumulator;
         accumulator = "";
       }
-      if (operator === "") operator = buttonID;
-
-        input.textContent += option.id
-        history.textContent += input.textContent;
-        input.textContent = "";
+          input.textContent += option.id;
+          history.textContent += input.textContent;
+          input.textContent = "";
     }
 
     if (firstNumber && type == "number") {
@@ -150,8 +150,10 @@ buttons.forEach(option => option.addEventListener("click", function () {
 
 
   // TODO 
-  // 1. Equals actions in keyboard and mouse. Add enter button
+  // 1. Equals actions in keyboard and mouse. Add enter button event listener
   // 2. Operate function functional
+  // 3. Add spaces and equals in history text content
+  // 4. Change display * for an X
 
 
 

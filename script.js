@@ -1,6 +1,6 @@
 // FUNCTIONS //
 function add (num,num2) {
-	return num + num2;
+	return Number(num) + Number(num2);
 };
 
 function substract (num, num2) {
@@ -34,6 +34,7 @@ var operator = "";
 var secondNumber = "";
 var accumulator = "";
 var buttonID;
+var counter = false;
 
 
 // Use these variables to do the calculations and keep storng the value. Read instructions in Odin Project //
@@ -48,7 +49,7 @@ const input = document.querySelector("#input");
 
 // REMOVE SECTION //
 clearAll.addEventListener("click", function () {
-    input.textContent = "";
+    input.textContent = "0";
     history.textContent = "";
     firstNumber = "";
     operator = "";
@@ -64,50 +65,79 @@ deleteOne.addEventListener("click", function forDelete () {
   input.textContent = currentInput; 
 });
   
+if (!input.textContent) input.textContent = "0";
 
 // MAIN BUTTONS // 
 buttons.forEach(option => option.addEventListener("click", function () {
     var type = option.classList[1];
     var result;
     buttonID = option.id;
-
-
     
     if (type === "number")  {
       if (input.textContent === "0" && buttonID === "0") return;
       if (input.textContent === "0") input.textContent = "";
 
       accumulator += buttonID;
-      input.textContent += option.id;
+      input.textContent += buttonID;
     }
-    // here solve problem in history content //
-    if (type === "symbol" && buttonID != "=") {
-      if (operator === "") operator = buttonID;
+    
+    if (type === "symbol") {
+      
+      operator = buttonID;
+      if (history.textContent.length === 1) history.textContent = "";
+      
+      if (counter) history.textContent = "";
 
       if (accumulator) {
         firstNumber = accumulator;
         accumulator = "";
       }
-          input.textContent += option.id;
-          history.textContent += input.textContent;
-          input.textContent = "";
+      input.textContent += operator;
+      history.textContent += input.textContent;
+      input.textContent = "";
     }
 
     if (firstNumber && type == "number") {
       secondNumber = accumulator;
     }
 
-    if (buttonID === "=") {
-      if (firstNumber && operator && secondNumber) {
-        result = operate(firstNumber,operator,secondNumber);
-        input.textContent = result;
-        history.textContent = firstNumber + operator + secondNumber;
-      }
+//     if (type === "dot") {
+//       if (!input.textContent) return;
+//       if (input.textContent.includes(".")) return;
+// // add the dot to first, second and accumulator, and the reflect in on the screen (input and history)
+//     }
+
+
+
+    if (type === "equals") {
+        if (firstNumber && operator && secondNumber) {
+          result = operate(firstNumber,operator,secondNumber);
+          console.log(result);
+          input.textContent = result;
+          history.textContent = firstNumber + " " + operator + " " + secondNumber + " = ";
+          counter = true;
+          accumulator = result;
+          
+          if (operator === "*") {
+            history.textContent = firstNumber + " " + "X" + " " + secondNumber + " = ";
+          }
+        }
     }
         return buttonID;
   }));
     
     
+
+
+
+
+
+
+
+
+
+
+
 // KEYBOARD INPUTS //     
   window.addEventListener("keydown", function(event) {
     // NUMBER //
@@ -120,7 +150,7 @@ buttons.forEach(option => option.addEventListener("click", function () {
       }  
 
     // SYMBOL // 
-    if (event.key === "." || event.key === "/" || event.key === "*" || event.key === "-" || event.key === "+") {
+    if (event.key === "/" || event.key === "*" || event.key === "-" || event.key === "+") {
         input.textContent += event.key;
         history.textContent = input.textContent;
         input.textContent = "";
@@ -149,11 +179,14 @@ buttons.forEach(option => option.addEventListener("click", function () {
 
 
 
-  // TODO 
-  // 1. Equals actions in keyboard and mouse. Add enter button event listener
-  // 2. Operate function functional
-  // 3. Add spaces and equals in history text content
-  // 4. Change display * for an X
-
-
+  // TODO FIRST
+  // . Add spaces and equals in history text content
+  // . Change display * for an X
+  // . Operate function functional when i press the symbols buttons and operate
+  // . Fix BUG select operator
+  // . When there are many symbols on space, fix it
+  
+  // TODO LAST
+  // . Equals actions in keyboard and mouse. Add enter button event listener
+  // . Add functionality to the DOT Button
 

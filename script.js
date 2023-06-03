@@ -12,7 +12,9 @@ function multiply (num, num2) {
 }
 
 function divide (num, num2) {
-  return num / num2;
+  var fixed = num / num2;
+
+  return fixed.toFixed(2);
 }
 
 function operate (num, symbol, num2) {
@@ -21,7 +23,7 @@ function operate (num, symbol, num2) {
       return add(num,num2);
     case "-":
       return substract(num,num2);
-    case "*":
+    case "X":
       return multiply(num,num2);
     case "/":
       return divide(num,num2);    
@@ -49,7 +51,7 @@ const input = document.querySelector("#input");
 
 // REMOVE SECTION //
 clearAll.addEventListener("click", function () {
-    input.textContent = "0";
+    input.textContent = "";
     history.textContent = "";
     firstNumber = "";
     operator = "";
@@ -65,7 +67,6 @@ deleteOne.addEventListener("click", function forDelete () {
   input.textContent = currentInput; 
 });
   
-if (!input.textContent) input.textContent = "0";
 
 // MAIN BUTTONS // 
 buttons.forEach(option => option.addEventListener("click", function () {
@@ -73,10 +74,11 @@ buttons.forEach(option => option.addEventListener("click", function () {
     var result;
     buttonID = option.id;
     
+    
     if (type === "number")  {
       if (input.textContent === "0" && buttonID === "0") return;
       if (input.textContent === "0") input.textContent = "";
-
+      
       accumulator += buttonID;
       input.textContent += buttonID;
     }
@@ -84,6 +86,7 @@ buttons.forEach(option => option.addEventListener("click", function () {
     if (type === "symbol") {
       
       operator = buttonID;
+      
       if (history.textContent.length === 1) history.textContent = "";
       
       if (counter) history.textContent = "";
@@ -92,14 +95,22 @@ buttons.forEach(option => option.addEventListener("click", function () {
         firstNumber = accumulator;
         accumulator = "";
       }
+
+      if (operator === "*") operator = "X";
+
       input.textContent += operator;
-      history.textContent += input.textContent;
+      history.textContent = firstNumber + " " + operator + " " + secondNumber;
       input.textContent = "";
+
+      if (firstNumber && operator && secondNumber) {
+
+      }
     }
 
     if (firstNumber && type == "number") {
       secondNumber = accumulator;
     }
+
 
 //     if (type === "dot") {
 //       if (!input.textContent) return;
@@ -112,15 +123,12 @@ buttons.forEach(option => option.addEventListener("click", function () {
     if (type === "equals") {
         if (firstNumber && operator && secondNumber) {
           result = operate(firstNumber,operator,secondNumber);
-          console.log(result);
           input.textContent = result;
           history.textContent = firstNumber + " " + operator + " " + secondNumber + " = ";
           counter = true;
           accumulator = result;
           
-          if (operator === "*") {
-            history.textContent = firstNumber + " " + "X" + " " + secondNumber + " = ";
-          }
+          if (operator === "*") operator = "X";
         }
     }
         return buttonID;
@@ -180,11 +188,10 @@ buttons.forEach(option => option.addEventListener("click", function () {
 
 
   // TODO FIRST
-  // . Add spaces and equals in history text content
-  // . Change display * for an X
-  // . Operate function functional when i press the symbols buttons and operate
-  // . Fix BUG select operator
-  // . When there are many symbols on space, fix it
+  // PRIORITY. Operate multiple operations without pressing "="
+
+  // . When history has a symbols and the input has a number
+  // . Floating Point when I get a decimal like 0.888888. Fix it to two decimals
   
   // TODO LAST
   // . Equals actions in keyboard and mouse. Add enter button event listener

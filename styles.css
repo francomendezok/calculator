@@ -33,14 +33,14 @@ p {
     overflow: hidden;
 }
 
-#history {
+#historyOperationScreen {
     margin: 5px 10px 0px 0px;
     height: 40px;
     font-size: 20px;
     padding-top: 10px;
 }
 
-#input {
+#inputOperationScreen {
     margin: 5px 25px 0px 0px;
     height: 50px;
     font-size: 40px;
@@ -102,8 +102,35 @@ p {
 }
 
 
+@media (max-width: 320px) {
+    
+    .container {
+        width: 90%;
+        height: 70%;
+    }
+
+    .remove {
+        gap: 20px;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
+        width: 100%;
+      }
+    
+      .button {
+        height: 50%;
+        width: 20%;
+        padding: 0;
+    }
+
+
+}
+
 /* TODO 
-1. Fix Screen Font Size and Margin
 2. Responsive Cellphones
 3. Add link to Github
 */

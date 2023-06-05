@@ -1,18 +1,21 @@
-var firstNumber = "";
-var operator = "";
-var secondNumber = "";
-var accumulator = "";
-var buttonID;
-var counter = false;
+// VARIABLES //
+let firstNumber = "";
+let secondNumber = "";
+let currentOperation = null;
+let shouldResetScreen = false;
 
-
-
-// EVENT LISTENERS //
+const numberButtons = document.querySelectorAll(".number");
+const operatorButtons = document.querySelectorAll(".operator");
+const equalsButton = document.querySelector(".equals");
 const clearAll = document.querySelector(".clear");
 const deleteOne = document.querySelector(".delete");
-const buttons = document.querySelectorAll(".button");
-const history = document.querySelector("#history");
-const input = document.querySelector("#input");
+const pointButton = document.querySelector(".dot");
+const history = document.querySelector("#historyOperationScreen");
+const input = document.querySelector("#inputOperationScreen");
+
+
+
+//EVENT LISTENERS //
 
 
 // REMOVE SECTION //
@@ -37,8 +40,8 @@ deleteOne.addEventListener("click", function forDelete () {
 
 // MAIN BUTTONS // 
 buttons.forEach(option => option.addEventListener("click", function () {
-    var type = option.classList[1];
-    var result;
+    let type = option.classList[1];
+    let result;
     buttonID = option.id;
     
     
@@ -60,7 +63,7 @@ buttons.forEach(option => option.addEventListener("click", function () {
         result = operate(firstNumber,operator,secondNumber);
         input.textContent = result;
         history.textContent = result + " " + operator;
-        counter = true;
+        shouldResetScreen = true;
         accumulator = result;
         
         if (operator === "*") operator = "X";
@@ -71,7 +74,7 @@ buttons.forEach(option => option.addEventListener("click", function () {
       
       if (history.textContent.length === 1) history.textContent = "";
       
-      if (counter) history.textContent = "";
+      if (shouldResetScreen) history.textContent = "";
 
       if (accumulator) {
         firstNumber = accumulator;
@@ -105,7 +108,7 @@ buttons.forEach(option => option.addEventListener("click", function () {
           result = operate(firstNumber,operator,secondNumber);
           input.textContent = result;
           history.textContent = firstNumber + " " + operator + " " + secondNumber + " = ";
-          counter = true;
+          shouldResetScreen = true;
           accumulator = result;
           
           if (operator === "*") operator = "X";
@@ -177,7 +180,7 @@ function multiply (num, num2) {
 }
 
 function divide (num, num2) {
-  var fixed = num / num2;
+  let fixed = num / num2;
 
   return fixed.toFixed(2);
 }

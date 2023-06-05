@@ -16,157 +16,101 @@ const input = document.querySelector("#inputOperationScreen");
 
 
 //EVENT LISTENERS //
+window.addEventListener("keydown", handleKeyboardInput);
+equalsButton.addEventListener("click", evaluate);
+clearAll.addEventListener("click", clear);
+deleteOne.addEventListener("click", deleteNumber);
+pointButton.addEventListener("click", appendPoint);
 
+numberButtons.forEach((button) =>
+  button.addEventListener("click", () => appendNumber(button.textContent))
+);
 
-// REMOVE SECTION //
-clearAll.addEventListener("click", function () {
-    input.textContent = "";
-    history.textContent = "";
-    firstNumber = "";
-    operator = "";
-    secondNumber = "";
-    accumulator = "";
-  })
+operatorButtons.forEach((button) =>
+  button.addEventListener("click", () => setOperation(button.textContent))
+);
 
-deleteOne.addEventListener("click", function forDelete () {
-  let currentInput = input.textContent;
-  currentInput = currentInput.slice(0, -1);
-  accumulator = accumulator.slice(0,-1);
-  secondNumber = secondNumber.slice(0,-1); 
-  input.textContent = currentInput; 
-});
-  
-
-
-// MAIN BUTTONS // 
-buttons.forEach(option => option.addEventListener("click", function () {
-    let type = option.classList[1];
-    let result;
-    buttonID = option.id;
-    
-    
-    if (type === "number")  {
-      if (input.textContent === "0" && buttonID === "0") return;
-      if (input.textContent === "0") input.textContent = "";
-      
-      accumulator += buttonID;
-      input.textContent = accumulator;
-    }
-    
-    if (type === "symbol") {
-
-      if (history.textContent = result + " " + operator) {
-
-      }
-      
-      if (firstNumber && operator && secondNumber) {
-        result = operate(firstNumber,operator,secondNumber);
-        input.textContent = result;
-        history.textContent = result + " " + operator;
-        shouldResetScreen = true;
-        accumulator = result;
-        
-        if (operator === "*") operator = "X";
-      }
-
-      else {
-      operator = buttonID;
-      
-      if (history.textContent.length === 1) history.textContent = "";
-      
-      if (shouldResetScreen) history.textContent = "";
-
-      if (accumulator) {
-        firstNumber = accumulator;
-        accumulator = "";
-      }
-
-      if (operator === "*") operator = "X";
-
-      // input.textContent += operator;
-      history.textContent = firstNumber + " " + operator + " " + secondNumber;
-      input.textContent = "";
-    }
-      
-    }
-
-    if (firstNumber && type == "number") {
-      secondNumber = accumulator;
-    }
-
-
-//     if (type === "dot") {
-//       if (!input.textContent) return;
-//       if (input.textContent.includes(".")) return;
-// // add the dot to first, second and accumulator, and the reflect in on the screen (input and history)
-//     }
-
-
-// HISTORY SHOWS ONLY WHEN I CLICK ON EQUALS //
-    if (type === "equals") {
-        if (firstNumber && operator && secondNumber) {
-          result = operate(firstNumber,operator,secondNumber);
-          input.textContent = result;
-          history.textContent = firstNumber + " " + operator + " " + secondNumber + " = ";
-          shouldResetScreen = true;
-          accumulator = result;
-          
-          if (operator === "*") operator = "X";
-        }
-    }
-        return buttonID;
-  }));
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-// KEYBOARD INPUTS //     
-  window.addEventListener("keydown", function(event) {
-    // NUMBER //
-    if (event.key === "1" || event.key === "2" || event.key === "3" || event.key === "4" || event.key === "5" || event.key === "6" || event.key === "7" || event.key === "8" || event.key === "9" || event.key === "0") {
-        if (input.textContent === "0" && event.key === "0") return;
-        if (input.textContent === "0") {
-          input.textContent = "";
-        }
-        input.textContent += event.key;
-      }  
-
-    // SYMBOL // 
-    if (event.key === "/" || event.key === "*" || event.key === "-" || event.key === "+") {
-        input.textContent += event.key;
-        history.textContent = input.textContent;
-        input.textContent = "";
-      }
-
-    // REMOVE //
-    if (event.key === "Backspace") {
-      let currentInput = input.textContent;
-      currentInput = currentInput.slice(0, -1); 
-      input.textContent = currentInput; 
-      accumulator = accumulator.slice(0,-1);
-      secondNumber = secondNumber.slice(0,-1); 
-    };
-
-    if (event.key === "Delete") {
-      input.textContent = "";
-      history.textContent = "";
-      firstNumber = "";
-      operator = "";
-      secondNumber = "";
-      accumulator = "";
-    }
-  });
 
 // FUNCTIONS //
+function clear() {
+  input.textContent = '0';
+  history.textContent = '';
+  firstNumber = '';
+  secondNumber = '';
+  currentOperation = null;
+}
+function deleteNumber() {
+  input.textContent = input.textContent.toString().slice(0, -1);
+}
+
+
+function appendNumber(number) {
+  if (input.textContent === '0' || shouldResetScreen) resetScreen();
+  input.textContent += number
+}
+
+function resetScreen() {
+  input.textContent = ''
+  shouldResetScreen = false
+}
+
+function setOperation(operator) {
+  if (currentOperation !== null) evaluate()
+  firstNumber = input.textContent
+  currentOperation = operator
+  history.textContent = `${firstNumber} ${currentOperation}`
+  shouldResetScreen = true
+}
+
+
+
+function evaluate() {
+  if (currentOperation === null || shouldResetScreen) return
+  if (currentOperation === '÷' && input.textContent === '0') {
+    alert("You can't divide by 0!")
+    return
+  }
+  secondNumber = input.textContent
+  input.textContent = roundResult(
+    operate(firstNumber, currentOperation, secondNumber)
+  )
+  history.textContent = `${firstNumber} ${currentOperation} ${secondNumber} =`
+  currentOperation = null
+}
+
+function roundResult(number) {
+  return Math.round(number * 1000) / 1000
+}
+
+function appendPoint() {
+  if (shouldResetScreen) resetScreen()
+  if (input.textContent === '')
+    input.textContent = '0'
+  if (input.textContent.includes('.')) return
+  input.textContent += '.'
+}
+
+
+
+// KEYBOARD //
+function handleKeyboardInput(e) {
+  if (e.key >= 0 && e.key <= 9) appendNumber(e.key)
+  if (e.key === '.') appendPoint()
+  if (e.key === '=' || e.key === 'Enter') evaluate()
+  if (e.key === 'Backspace') deleteNumber()
+  if (e.key === 'Delete') clear()
+  if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/')
+    setOperation(convertOperator(e.key))
+}
+
+function convertOperator(keyboardOperator) {
+  if (keyboardOperator === '/') return '/'
+  if (keyboardOperator === '*') return 'X'
+  if (keyboardOperator === '-') return '-'
+  if (keyboardOperator === '+') return '+'
+}
+
+// CALCULATE // 
 function add (num,num2) {
 	return num + num2;
 };
@@ -180,9 +124,7 @@ function multiply (num, num2) {
 }
 
 function divide (num, num2) {
-  let fixed = num / num2;
-
-  return fixed.toFixed(2);
+  return num / num2; 
 }
 
 function operate (num, symbol, num2) {
@@ -200,16 +142,3 @@ function operate (num, symbol, num2) {
       return divide(num,num2);    
   }
 }
-
-
-
-  // TODO FIRST
-  // PRIORITY. Operate multiple operations without pressing "="
-
-  // . When history has a symbols and the input has a number
-  // . Floating Point when I get a decimal like 0.888888. Fix it to two decimals
-  
-  // TODO LAST
-  // . Equals actions in keyboard and mouse. Add enter button event listener
-  // . Add functionality to the DOT Button
-

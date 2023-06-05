@@ -1,36 +1,3 @@
-// FUNCTIONS //
-function add (num,num2) {
-	return Number(num) + Number(num2);
-};
-
-function substract (num, num2) {
-	return num - num2;
-};
-
-function multiply (num, num2) {
-  return num * num2;
-}
-
-function divide (num, num2) {
-  var fixed = num / num2;
-
-  return fixed.toFixed(2);
-}
-
-function operate (num, symbol, num2) {
-  switch (symbol) {
-    case "+":
-      return add(num,num2);
-    case "-":
-      return substract(num,num2);
-    case "X":
-      return multiply(num,num2);
-    case "/":
-      return divide(num,num2);    
-  }
-}
-
-
 var firstNumber = "";
 var operator = "";
 var secondNumber = "";
@@ -39,7 +6,6 @@ var buttonID;
 var counter = false;
 
 
-// Use these variables to do the calculations and keep storng the value. Read instructions in Odin Project //
 
 // EVENT LISTENERS //
 const clearAll = document.querySelector(".clear");
@@ -68,6 +34,7 @@ deleteOne.addEventListener("click", function forDelete () {
 });
   
 
+
 // MAIN BUTTONS // 
 buttons.forEach(option => option.addEventListener("click", function () {
     var type = option.classList[1];
@@ -80,11 +47,26 @@ buttons.forEach(option => option.addEventListener("click", function () {
       if (input.textContent === "0") input.textContent = "";
       
       accumulator += buttonID;
-      input.textContent += buttonID;
+      input.textContent = accumulator;
     }
     
     if (type === "symbol") {
+
+      if (history.textContent = result + " " + operator) {
+
+      }
       
+      if (firstNumber && operator && secondNumber) {
+        result = operate(firstNumber,operator,secondNumber);
+        input.textContent = result;
+        history.textContent = result + " " + operator;
+        counter = true;
+        accumulator = result;
+        
+        if (operator === "*") operator = "X";
+      }
+
+      else {
       operator = buttonID;
       
       if (history.textContent.length === 1) history.textContent = "";
@@ -98,13 +80,11 @@ buttons.forEach(option => option.addEventListener("click", function () {
 
       if (operator === "*") operator = "X";
 
-      input.textContent += operator;
+      // input.textContent += operator;
       history.textContent = firstNumber + " " + operator + " " + secondNumber;
       input.textContent = "";
-
-      if (firstNumber && operator && secondNumber) {
-
-      }
+    }
+      
     }
 
     if (firstNumber && type == "number") {
@@ -119,7 +99,7 @@ buttons.forEach(option => option.addEventListener("click", function () {
 //     }
 
 
-
+// HISTORY SHOWS ONLY WHEN I CLICK ON EQUALS //
     if (type === "equals") {
         if (firstNumber && operator && secondNumber) {
           result = operate(firstNumber,operator,secondNumber);
@@ -183,7 +163,40 @@ buttons.forEach(option => option.addEventListener("click", function () {
     }
   });
 
+// FUNCTIONS //
+function add (num,num2) {
+	return num + num2;
+};
 
+function substract (num, num2) {
+	return num - num2;
+};
+
+function multiply (num, num2) {
+  return num * num2;
+}
+
+function divide (num, num2) {
+  var fixed = num / num2;
+
+  return fixed.toFixed(2);
+}
+
+function operate (num, symbol, num2) {
+  num = Number(num);
+  num2 = Number(num2);
+
+  switch (symbol) {
+    case "+":
+      return add(num,num2);
+    case "-":
+      return substract(num,num2);
+    case "X":
+      return multiply(num,num2);
+    case "/":
+      return divide(num,num2);    
+  }
+}
 
 
 

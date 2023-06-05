@@ -100,3 +100,10 @@ p {
 .button:hover {
     transform: scale(1,1.1);
 }
+
+
+/* TODO 
+1. Fix Screen Font Size and Margin
+2. Responsive Cellphones
+3. Add link to Github
+*/
